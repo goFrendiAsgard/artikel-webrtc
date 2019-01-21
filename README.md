@@ -40,54 +40,68 @@ Arduino adalah papan mikrokontroler berbasis atmega yang telah memiliki beraneka
 
 # Implementasi
 
-![skema](Skema.png)
+![skema](skema.png)
 
-Dalam penelitian ini, dibuat dua buah program untuk pembuktian konsep. Program pertama diletakkan di application-server. Program ini dibuat dengan menggunakan framework Node.js dan beberapa library seperti koa, socket.io, dan webRTC adapter. Program ini meng-expose beberapa end-point:
+Dalam penelitian ini, dibuat dua buah program untuk pembuktian konsep. Program pertama diletakkan di application-server, sedangkan program kedua diletakkan pada arduino sebagai penghubung antara komputer dan RIG.
+
+## Program Application Server
+
+Program application-server dibuat dengan menggunakan framework Node.js dan beberapa library seperti koa, socket.io, serta webRTC adapter. Selain menginisiasi komunikasi RTC, program application-server juga berfungsi untuk menerima dan mem-broadcast sinyal PTT dari client. Beberapa end-point yang di-ekspose oleh application server antara lain:
 
 * `/`: Digunakan untuk tampilan utama web-RTC serta mengirimkan sinyal PTT.
 * `/login`: Digunakan untuk login.
-* `/logout`:
-* `/register`:
-* `/user-list`:
+* `/logout`: Digunakan untuk logout.
+* `/register`: Digunakan untuk mendaftar sebagai pengguna baru.
+* `/user-list`: Digunakan untuk menampillkan daftar pengguna.
+
+![Uml](uml.png)
+
+![Manage user](manage-user.png)
+
+![RTC](rtc.png)
+
+# Program Arduino
 
 Program kedua adalah interface arduino untuk menghubungkan laptop dan RIG. Kode program pada aplikasi kedua adalah sebagai berikut:
 
 ```c
-#include <WebUSB.h>
-#define Serial WebUSBSerial
-WebUSB WebUSBSerial(1, "roiptim.com/playground");
+    #include <WebUSB.h>
+    #define Serial WebUSBSerial
+    WebUSB WebUSBSerial(1, "roiptim.com/playground");
 
-int led = 13;
-int btn = 12;
-int heartBeat = 0;
+    int led = 13;
+    int btn = 12;
+    int heartBeat = 0;
 
-void setup() {
-  pinMode(led, OUTPUT);
-  pinMode(btn, INPUT);
-  Serial.begin(9600); 
-  while(!Serial.available()) {
-    delay(10); 
-  }
-}
-
-void loop() {  
-  if (heartBeat == 10) {
-    heartBeat = 0;
-    int pressed = digitalRead(btn);
-    if (pressed) {
-      Serial.print(1); Serial.flush(); // send `1` to client if the button is pressed
-    } else {
-      Serial.print(0); Serial.flush(); // send `0` to client if the button is not pressed
+    void setup() {
+      pinMode(led, OUTPUT);
+      pinMode(btn, INPUT);
+      Serial.begin(9600); 
+      while(!Serial.available()) {
+        delay(10); 
+      }
     }
-    // if client request is complete and the command is correct, turn on the lamp. Valid command is either `0` or `1`.
-    int input = Serial.read();
-    if (input == 1 || input == 0) {
-      digitalWrite(led, input);
+
+    void loop() {  
+      if (heartBeat == 10) {
+        heartBeat = 0;
+        int pressed = digitalRead(btn);
+        if (pressed) {
+          Serial.print(1); Serial.flush(); // send `1` to client if the button is pressed
+        } else {
+          Serial.print(0); Serial.flush(); // send `0` to client if the button is not pressed
+        }
+        // if client request is complete and the command is correct, turn on the lamp. Valid command is either `0` or `1`.
+        int input = Serial.read();
+        if (input == 1 || input == 0) {
+          digitalWrite(led, input);
+        }
+      }
+      heartBeat++;
     }
-  }
-  heartBeat++;
-}
 ```
+
+Secara umum program ini berfungsi untuk membaca dan mengirim sinyal PTT dari perangkat RIG ke server atau sebaliknya. Pembacaan dilakukan setiap sepuluh kali perulangan.
 
 # Kesimpulan
 
