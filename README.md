@@ -1,3 +1,7 @@
+# Judul
+
+Prototipe ROIP dengan menggunakan Web-RTC, Web-USB, dan Arduino-Leonardo
+
 # Latar belakang
 
 Saat ini komunikasi dengan media internet telah banyak digunakan untuk menggantikan komunikasi dengan media konvensional. Masyarakat umum telah mulai terbiasa memanfaatkan layanan voice-over-IP seperti whatsapp-call dan skype. Layanan-layanan VOIP tersebut umumnya lebih murah dan praktis. Pengguna hanya perlu menginstall aplikasi yang dibutuhkan di smartphone atau komputer mereka.
@@ -40,11 +44,11 @@ Arduino adalah papan mikrokontroler berbasis atmega yang telah memiliki beraneka
 
 Dalam penelitian ini, dibuat dua buah program untuk pembuktian konsep. Program pertama diletakkan di application-server. Program ini dibuat dengan menggunakan framework Node.js dan beberapa library seperti koa, socket.io, dan webRTC adapter. Program ini meng-expose beberapa end-point:
 
-* `/`
-* `/login`
-* `/logout`
-* `/register`
-* `/user-list`
+* `/`: Digunakan untuk tampilan utama web-RTC serta mengirimkan sinyal PTT.
+* `/login`: Digunakan untuk login.
+* `/logout`:
+* `/register`:
+* `/user-list`:
 
 Program kedua adalah interface arduino untuk menghubungkan laptop dan RIG. Kode program pada aplikasi kedua adalah sebagai berikut:
 
@@ -87,7 +91,10 @@ void loop() {
 
 # Kesimpulan
 
+Secara umum teknologi Web-RTC dan Web-USB serta arduino dapat dimanfaatkan untuk implementasi ROIP. Adapun demikian, masih ada keterbatasan antara lain banyaknya jumlah client yang bisa terhubung secara bersamaan sangat tergantung pada bandwidth dari masing-masing client.
+
 # Referensi
+* https://github.com/goFrendiAsgard/webrtc
 * http://comtekk.us/roip.htm
 * https://wicg.github.io/webusb/
 * https://webrtc.org/
