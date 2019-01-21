@@ -18,15 +18,72 @@ Dalam penelitian ini akan dibuat prototipe komunikasi ROIP dengan memanfaatkan w
 
 ## ROIP
 
+ROIP (Radio Over IP Protocol) adalah suatu protokol untuk mengemulasikan radio dua arah menggunakan jaringan IP. Bisa dikatakan, ROIP adalah VOIP yang diberi kapabilitas PTT (Push-to-talk). Kapabilitas PTT ini menyebabkan jika salah satu radio berbicara, maka radio-radio yang lain hanya bisa mendengar. Beberapa vendor seperti Galaxy PTT Comms, AllStar Link, BroadNet, IRLP, dan EchoLink telah berusaha mengimplementasikan ROIP dalam produk-produk mereka.
+
 ## Web-RTC
+
+Web RTC (Web Real Time Communication) adalah protokol untuk bertukar informasi video/audio secara real-time. Web-RTC memanfaatkan peer-to-peer connection. Artinya, data video/audio dihantarkan langsung ke client lain tanpa perlu melewati server perantara. Adapun demikian, Web-RTC masih membutuhkan signaling server (STUN). STUN server tersebut bertugas sebagai client-discovery service. Artinya saat satu client ingin menghubungi client lain, STUN server akan memberikan lokasi client yang bersangkutan.
+
+Di samping STUN server, Web-RTC juga membutuhkan TURN server. TURN server ini bertugas untuk menyediakan fall-back communication medium. Artinya, jika komunikasi peer-to-peer tidak dimungkinkan (semisal client berada di balik firewall), maka TURN server inilah yang akan bertugas sebagai perantara. Dalam kondisi ideal, TURN server seharusnya tidak dibutuhkan.
 
 ## Web-USB
 
+Web USB API adalah standar komunikasi untuk mengekspos perangkat USB di web. Web USB sangat berguna untuk kepentingan IOT. Web USB memungkinkan seorang developer untuk membuat sebuah halaman web yang dapat mengakses perangkat USB client secara langsung tanpa perlu adanya third-party library. Salah satu browser yang mendukung Web-USB API adalah google-chrome.
+
 ## Arduino
+
+Arduino adalah papan mikrokontroler berbasis atmega yang telah memiliki beraneka ragam fitur untuk memudahkan proses development. Arduino biasa dipakai untuk kepentingan prototyping. Pemrograman arduino juga relatif mudah karena menggunakan bahasa pemrograman C yang sudah banyak dikenal.
 
 # Implementasi
 
 ![skema](Skema.png)
+
+Dalam penelitian ini, dibuat dua buah program untuk pembuktian konsep. Program pertama diletakkan di application-server. Program ini dibuat dengan menggunakan framework Node.js dan beberapa library seperti koa, socket.io, dan webRTC adapter. Program ini meng-expose beberapa end-point:
+
+* `/`
+* `/login`
+* `/logout`
+* `/register`
+* `/user-list`
+
+Program kedua adalah interface arduino untuk menghubungkan laptop dan RIG. Kode program pada aplikasi kedua adalah sebagai berikut:
+
+```c
+#include <WebUSB.h>
+#define Serial WebUSBSerial
+WebUSB WebUSBSerial(1, "roiptim.com/playground");
+
+int led = 13;
+int btn = 12;
+int heartBeat = 0;
+
+void setup() {
+  pinMode(led, OUTPUT);
+  pinMode(btn, INPUT);
+  Serial.begin(9600); 
+  while(!Serial.available()) {
+    delay(10); 
+  }
+}
+
+void loop() {  
+  if (heartBeat == 10) {
+    heartBeat = 0;
+    int pressed = digitalRead(btn);
+    if (pressed) {
+      Serial.print(1); Serial.flush(); // send `1` to client if the button is pressed
+    } else {
+      Serial.print(0); Serial.flush(); // send `0` to client if the button is not pressed
+    }
+    // if client request is complete and the command is correct, turn on the lamp. Valid command is either `0` or `1`.
+    int input = Serial.read();
+    if (input == 1 || input == 0) {
+      digitalWrite(led, input);
+    }
+  }
+  heartBeat++;
+}
+```
 
 # Kesimpulan
 
