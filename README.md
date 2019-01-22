@@ -2,6 +2,12 @@
 
 Prototipe ROIP dengan menggunakan Web-RTC, Web-USB, dan Arduino-Leonardo
 
+# Penulis
+
+* Go Frendi Gunawan (frendi@stiki.ac.id)
+* Jozua Ferjanus Palandi (jozuafp@stiki.ac.id)
+* Subari (subari@stiki.ac.id)
+
 # Latar belakang
 
 Saat ini komunikasi dengan media internet telah banyak digunakan untuk menggantikan komunikasi dengan media konvensional. Masyarakat umum telah mulai terbiasa memanfaatkan layanan voice-over-IP seperti whatsapp-call dan skype. Layanan-layanan VOIP tersebut umumnya lebih murah dan praktis. Pengguna hanya perlu menginstall aplikasi yang dibutuhkan di smartphone atau komputer mereka.
