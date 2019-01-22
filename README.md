@@ -54,11 +54,21 @@ Program application-server dibuat dengan menggunakan framework Node.js dan beber
 * `/register`: Digunakan untuk mendaftar sebagai pengguna baru.
 * `/user-list`: Digunakan untuk menampillkan daftar pengguna.
 
-![Uml](uml.png)
+![Usecase diagram](uml.png)
+
+Usecase diagram application server
 
 ![Manage user](manage-user.png)
 
+Antarmuka manage user
+
 ![RTC](rtc.png)
+
+RTC session
+
+![RIG](rig.png)
+
+Setting RIG + HTT
 
 # Program Arduino
 
@@ -76,13 +86,13 @@ Program kedua adalah interface arduino untuk menghubungkan laptop dan RIG. Kode 
     void setup() {
       pinMode(led, OUTPUT);
       pinMode(btn, INPUT);
-      Serial.begin(9600); 
+      Serial.begin(9600);
       while(!Serial.available()) {
-        delay(10); 
+        delay(10);
       }
     }
 
-    void loop() {  
+    void loop() {
       if (heartBeat == 10) {
         heartBeat = 0;
         int pressed = digitalRead(btn);
