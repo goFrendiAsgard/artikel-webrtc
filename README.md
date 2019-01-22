@@ -66,11 +66,12 @@ Antarmuka manage user
 
 RTC session
 
-![RIG](rig.png)
+# Program Arduino
+
+![RIG](rig.jpg)
 
 Setting RIG + HTT
 
-# Program Arduino
 
 Program kedua adalah interface arduino untuk menghubungkan laptop dan RIG. Kode program pada aplikasi kedua adalah sebagai berikut:
 
